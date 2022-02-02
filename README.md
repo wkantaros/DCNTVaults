@@ -14,3 +14,5 @@ Importantly, this mechanism exists entirely on-chain, so the redemption of locke
 DCNT VW’s mechanism distributes tokens based strictly on one’s percentage ownership in an NFT collection, eliminating the need for a snapshot, manual split entry, or Merkle tree (IRL examples include Uniswap’s [Merkle Distributor](https://github.com/Uniswap/merkle-distributor), Mirror’s [Splits](https://github.com/mirror-xyz/splits), and OpenZepplin’s [Payment Splitter](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/finance/PaymentSplitter.sol)). These NFTs can trade hands after the vault unlocks, and whoever the current owner is can claim their respective ERC-20 token share. 
 
 For example, suppose a collection of 100 NFTs are minted. A DCNT VW can then be created with a time horizon of one year to wrap this collection, and 10,000 USDC is deposited into the embedded vault over the locked period.  At the end of the year, each NFT could “unlock” and redeem a percentage of the vault (in this case 100 USDC).
+
+Note these contracts have not been audited
