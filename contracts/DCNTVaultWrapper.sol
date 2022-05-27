@@ -70,39 +70,17 @@ contract DCNTVaultWrapper is Ownable {
     return (totalReceived * numNftVaultKeys) / nftVaultKey.totalSupply();
   }
 
-  // claim all the tokens from Nft
-  function claimAll(address to) external {
-    require(block.timestamp >= unlockDate, 'vault is still locked');
-    require(vaultBalance() > 0, 'vault is empty');
-    uint256 numTokens = nftVaultKey.balanceOf(to);
-    uint256 tokensToClaim = 0;
-    for (uint256 i = 0; i < numTokens; i++){
-      uint256 tokenId = nftVaultKey.tokenOfOwnerByIndex(to, i);
-      if (!hasClaimedTokenId[tokenId]) {
-        tokensToClaim++;
-        hasClaimedTokenId[tokenId] = true;
-      }
-    }
-
-    uint256 amount = _pendingPayment(tokensToClaim, vaultBalance() + totalReleased());
-    require(amount > 0, 'address has no claimable tokens');
-    require(vaultDistributionToken.transfer(to, amount), 'Transfer failed');
-    _totalReleased += amount;
-    emit Claimed(to, amount);
-  }
-
-  // serves similar purpose to claim all but allows user to claim specific
-  // token for one of NFTs in collection
+  // claim all the tokens for a key
   function claim(address to, uint256 tokenId) external {
-    require(block.timestamp >= unlockDate, 'vault is still locked');
-    require(vaultBalance() > 0, 'vault is empty');
-    require(nftVaultKey.ownerOf(tokenId) == to, 'address does not own token');
-    require(!hasClaimedTokenId[tokenId], 'token already claimed');
+    require(block.timestamp >= unlockDate, "vault is still locked");
+    require(vaultBalance() > 0, "vault is empty");
+    require(nftVaultKey.ownerOf(tokenId) == to, "address does not own token");
+    require(!hasClaimedTokenId[tokenId], "token already claimed");
 
     // mark it claimed and send token
     hasClaimedTokenId[tokenId] = true;
     uint256 amount = _pendingPayment(1, vaultBalance() + totalReleased());
-    require(vaultDistributionToken.transfer(to, amount), 'Transfer failed');
+    require(vaultDistributionToken.transfer(to, amount), "Transfer failed");
     _totalReleased += amount;
     emit Claimed(to, amount);
   }
